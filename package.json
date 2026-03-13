@@ -1,0 +1,22 @@
+{
+  "name": "ai-economic-impact-tracker",
+  "private": true,
+  "scripts": {
+    "dev:backend": "go run backend/src/main.go",
+    "dev:frontend": "vite --config frontend/vite.config.ts",
+    "dev": "bun run dev:backend & bun run dev:frontend",
+    "build:frontend": "tsc && vite build --config frontend/vite.config.ts"
+  },
+  "dependencies": {
+    "@types/bun": "^1.3.10",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0"
+  }
+}
