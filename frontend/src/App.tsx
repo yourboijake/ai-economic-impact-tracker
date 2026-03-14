@@ -1,23 +1,54 @@
-import { useState, useEffect } from "react";
-import type { Series } from "./types/api";
+import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+
+const NAV_LINKS = [
+  { label: "Labor Markets", to: "/labor-markets" },
+  { label: "Productivity", to: "/productivity" },
+  { label: "About", to: "/about" },
+];
+
+function Navbar() {
+  return (
+    <header>
+      <nav style={{ backgroundColor: "#1d3557" }} className="text-white">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between gap-10">
+          <Link to="/" className="text-xl font-semibold leading-tight shrink-0">
+            AI Economic Impact Tracker
+          </Link>
+
+          <ul className="hidden md:flex items-center gap-8 text-base">
+            {NAV_LINKS.map(({ label, to }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  className={({ isActive }) =>
+                    isActive ? "text-white" : "text-white/70 hover:text-white transition-colors"
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+    </header>
+  );
+}
 
 export default function App() {
-  const [data, setData] = useState<Series | null>(null);
-
-  useEffect(() => {
-    fetch("/api/test")
-      .then((response) => response.json())
-      .then((data: Series) => setData(data))
-      .catch((error) => {
-        console.error("Error fetching greeting:", error);
-        setData(null);
-      });
-  }, []);
-
   return (
-    <div>
-      <h1>AI Economic Impact Tracker</h1>
-      <p>Backend says: {JSON.stringify(data) ?? "Loading..."}</p>
-    </div>
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-10">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
