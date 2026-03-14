@@ -2,7 +2,7 @@
   "name": "ai-economic-impact-tracker",
   "private": true,
   "scripts": {
-    "dev:backend": "go run backend/src/main.go",
+    "dev:backend": "air",
     "dev:frontend": "vite --config frontend/vite.config.ts",
     "dev": "bun run dev:backend & bun run dev:frontend",
     "build:frontend": "tsc && vite build --config frontend/vite.config.ts"
