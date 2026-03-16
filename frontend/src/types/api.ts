@@ -33,7 +33,7 @@ export interface Series {
 export interface Observation {
   Model: any /* gorm.Model */;
   series_id: number /* uint */;
-  date: any /* time.Time */;
+  date: Date;
   value: number /* float64 */;
 }
 export interface SeriesObservationsAPIResponse {

@@ -4,7 +4,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   Line,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
@@ -19,27 +18,34 @@ export function TimeSeriesGraph({
 
   // Transform observations into a format suitable for Recharts
   const chartData = observations.map((obs) => ({
-    date: obs.date, // Assuming obs.date is in a format that can be parsed by Recharts
+    date: obs.date,
     value: obs.value,
   }));
 
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">{series.title}</h2>
+      <p className="text-md">{series.description}</p>
       <LineChart
         width={800}
         height={400}
         data={chartData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        margin={{ top: 20, right: 60, left: 20, bottom: 60 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
+        <XAxis
+          dataKey="date"
+          tickFormatter={(value) => value.slice(0, 10)}
+          angle={60}
+          textAnchor="start"
+        />
         <YAxis />
-        <Tooltip />
-        <Legend />
+        <Tooltip labelFormatter={(value) => value.slice(0, 10)} />
         <Line type="monotone" dataKey="value" dot={false} />
       </LineChart>
       <RechartsDevtools />
+      <p className="text-sm mt-4">Source: {series.source}</p>
+      <p className="text-sm mt-2">Notes: {series.notes}</p>
     </div>
   );
 }
