@@ -3,28 +3,17 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/yourboijake/ai-economic-impact-tracker/backend/src/models"
-	"gorm.io/gorm"
 )
 
 func main() {
-	db, ctx, err := models.InitDB()
+	db, _, err := models.InitDB()
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
 
-	m := models.Series{
-		Title:       "Test Series",
-		Description: "This is a test series for demonstration purposes.",
-		Unit:        "Millions",
-		Source:      "Test Source",
-		Frequency:   "Monthly",
-		Notes:       "No additional notes.",
-	}
-
-	gorm.G[models.Series](db).Create(*ctx, &m)
-	retrieved, err := gorm.G[models.Series](db).Find(*ctx)
+	retrieved, err := models.GetSeriesWithObservationsBySeriesID(db, 1)
 	if err != nil {
-		panic("Failed to retrieve series!")
+		panic("Failed to retrieve series with observations!")
 	}
 
 	r := gin.Default()

@@ -25,6 +25,18 @@ func CreateObservations(db *gorm.DB, observations []Observation) error {
 	return nil
 }
 
+func GetSeriesWithObservationsBySeriesID(db *gorm.DB, seriesID uint) (*SeriesObservationsAPIResponse, error) {
+	var series Series
+	result := db.Preload("Observations").First(&series, seriesID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &SeriesObservationsAPIResponse{
+		Series:       series,
+		Observations: series.Observations,
+	}, nil
+}
+
 func InitDB() (*gorm.DB, *context.Context, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	// db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
