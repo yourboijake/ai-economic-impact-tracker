@@ -25,13 +25,13 @@ func CreateObservations(db *gorm.DB, observations []Observation) error {
 	return nil
 }
 
-func GetSeriesWithObservationsBySeriesID(db *gorm.DB, seriesID uint) (*SeriesObservationsAPIResponse, error) {
+func GetSeriesWithObservationsBySeriesID(db *gorm.DB, seriesID uint) (*SeriesWithObservations, error) {
 	var series Series
 	result := db.Preload("Observations").First(&series, seriesID)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &SeriesObservationsAPIResponse{
+	return &SeriesWithObservations{
 		Series:       series,
 		Observations: series.Observations,
 	}, nil
