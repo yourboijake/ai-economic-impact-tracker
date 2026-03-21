@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
-import type { SeriesObservationsAPIResponse } from "../types/api";
+import type { SeriesWithObservations } from "../types/api";
 import { TimeSeriesGraph } from "../components/custom/time-series-graph";
 
 export default function Home() {
-  const [data, setData] = useState<SeriesObservationsAPIResponse | null>(null);
+  const [allData, setAllData] = useState<SeriesWithObservations[] | null>(null);
 
   useEffect(() => {
-    fetch("/api/test")
-      .then((response) => response.json())
-      .then((data: SeriesObservationsAPIResponse) => setData(data))
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setData(null);
-      });
+    fetch(`${import.meta.env.BASE_URL}data.json`)
+      .then((res) => res.json())
+      .then((data: SeriesWithObservations[]) => setAllData(data))
+      .catch((err) => console.error("Error loading data:", err));
   }, []);
 
   return (
@@ -21,7 +18,7 @@ export default function Home() {
         AI Economic Impact Tracker
       </h1>
 
-      {data && <TimeSeriesGraph data={data} />}
+      {allData && <TimeSeriesGraph data={allData[0]} />}
     </>
   );
 }

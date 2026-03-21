@@ -1,11 +1,52 @@
-import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import { HashRouter as BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "./components/ui/dropdown-menu";
+import { Button } from "./components/ui/button";
 
-const NAV_LINKS = [
-  { label: "Labor Markets", to: "/labor-markets" },
-  { label: "Productivity", to: "/productivity" },
-  { label: "About", to: "/about" },
+interface NavLinkItem {
+  label: string;
+  baseLink: string;
+  subLinks: { key: string; link: string }[] | null;
+}
+
+const NAV_LINKS: NavLinkItem[] = [
+  {
+    label: "Labor Markets",
+    baseLink: "/labor-markets",
+    subLinks: [
+      {
+        key: "Unemployment & Underemployment",
+        link: "/unemployment-underemployment",
+      },
+      { key: "Wage Growth", link: "/wage-growth" },
+      {
+        key: "Number of Workers in Exposed Industries",
+        link: "/workers-exposed-industries",
+      },
+      {
+        key: "Number of Job Listings in Exposed Industries",
+        link: "/job-listings-exposed-industries",
+      },
+    ],
+  },
+  {
+    label: "Productivity",
+    baseLink: "/productivity",
+    subLinks: [
+      { key: "TFP Growth", link: "/tfp-growth" },
+      { key: "Adoption Data", link: "/adoption-data" },
+      { key: "Software Dev Productivity", link: "/software-dev-productivity" },
+      { key: "Corporate Financials", link: "/corporate-financials" },
+    ],
+  },
+  { label: "About", baseLink: "/about", subLinks: null },
 ];
 
 function Navbar() {
@@ -18,16 +59,42 @@ function Navbar() {
           </Link>
 
           <ul className="hidden md:flex items-center gap-8 text-base">
-            {NAV_LINKS.map(({ label, to }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  className={({ isActive }) =>
-                    isActive ? "text-white" : "text-white/70 hover:text-white transition-colors"
-                  }
-                >
-                  {label}
-                </NavLink>
+            {NAV_LINKS.map(({ label, baseLink, subLinks }) => (
+              <li key={baseLink}>
+                {subLinks === null ? (
+                  <NavLink
+                    to={baseLink}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-white"
+                        : "text-white/70 hover:text-white transition-colors"
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button> {label}</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {subLinks?.map(({ key, link }) => (
+                        <DropdownMenuItem key={key}>
+                          <NavLink
+                            to={`${baseLink}${link}`}
+                            className={({ isActive }) =>
+                              isActive
+                                ? "text-white"
+                                : "text-white/70 hover:text-white transition-colors"
+                            }
+                          >
+                            {key}
+                          </NavLink>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </li>
             ))}
           </ul>
