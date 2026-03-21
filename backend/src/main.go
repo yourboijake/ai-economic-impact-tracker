@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/yourboijake/ai-economic-impact-tracker/backend/src/models"
 )
@@ -16,8 +18,10 @@ func main() {
 		panic("Failed to retrieve series with observations!")
 	}
 
+	fmt.Println("obs count:", len(retrieved.Observations))
+
 	r := gin.Default()
-	r.GET("/api/test", func(c *gin.Context) {
+	r.GET("/api/data", func(c *gin.Context) {
 		c.JSON(200, retrieved)
 	})
 
