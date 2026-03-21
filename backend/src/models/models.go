@@ -13,6 +13,7 @@ type Series struct {
 	Description  string        `json:"description"`
 	Unit         string        `json:"unit"`
 	Source       string        `json:"source"`
+	SourceURL    string        `json:"source_url"`
 	Frequency    string        `json:"frequency"`
 	Notes        string        `json:"notes"`
 	Observations []Observation `json:"observations"`
@@ -25,7 +26,7 @@ type Observation struct {
 	Value    float64   `json:"value"`
 }
 
-type SeriesObservationsAPIResponse struct {
+type SeriesWithObservations struct {
 	Series       Series        `json:"series"`
 	Observations []Observation `json:"observations"`
 }
