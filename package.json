@@ -5,7 +5,8 @@
     "dev:backend": "air",
     "dev:frontend": "vite --config frontend/vite.config.ts",
     "dev": "bun run dev:backend & bun run dev:frontend",
-    "build:frontend": "tsc && vite build --config frontend/vite.config.ts"
+    "build:frontend": "tsc && vite build --config frontend/vite.config.ts",
+    "generate:data": "node scripts/generate-data.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",
