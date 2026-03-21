@@ -1,4 +1,10 @@
-import { HashRouter as BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import {
+  HashRouter as BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  NavLink,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import {
@@ -53,7 +59,7 @@ function Navbar() {
   return (
     <header>
       <nav style={{ backgroundColor: "#1d3557" }} className="text-white">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex justify-between gap-10">
+        <div className="mx-auto max-w-7xl px-6 py-2 flex items-center justify-between gap-10">
           <Link to="/" className="text-xl font-semibold leading-tight shrink-0">
             AI Economic Impact Tracker
           </Link>
@@ -66,8 +72,8 @@ function Navbar() {
                     to={baseLink}
                     className={({ isActive }) =>
                       isActive
-                        ? "text-white"
-                        : "text-white/70 hover:text-white transition-colors"
+                        ? "text-white text-md"
+                        : "text-white/70 hover:text-white transition-colors text-md"
                     }
                   >
                     {label}
@@ -75,21 +81,14 @@ function Navbar() {
                 ) : (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button> {label}</Button>
+                      <Button className="text-white/70 hover:text-white transition-colors text-md">
+                        {label}
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       {subLinks?.map(({ key, link }) => (
                         <DropdownMenuItem key={key}>
-                          <NavLink
-                            to={`${baseLink}${link}`}
-                            className={({ isActive }) =>
-                              isActive
-                                ? "text-white"
-                                : "text-white/70 hover:text-white transition-colors"
-                            }
-                          >
-                            {key}
-                          </NavLink>
+                          <NavLink to={`${baseLink}${link}`}>{key}</NavLink>
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
