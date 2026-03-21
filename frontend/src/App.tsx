@@ -7,14 +7,6 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "./components/ui/dropdown-menu";
-import { Button } from "./components/ui/button";
 
 interface NavLinkItem {
   label: string;
@@ -79,20 +71,23 @@ function Navbar() {
                     {label}
                   </NavLink>
                 ) : (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="text-white/70 hover:text-white transition-colors text-md">
-                        {label}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {subLinks?.map(({ key, link }) => (
-                        <DropdownMenuItem key={key}>
-                          <NavLink to={`${baseLink}${link}`}>{key}</NavLink>
-                        </DropdownMenuItem>
+                  <div className="relative group">
+                    <span className="text-white/70 group-hover:text-white transition-colors cursor-default text-md select-none">
+                      {label}
+                    </span>
+                    <ul className="hidden group-hover:block absolute left-0 top-full w-48 rounded-md bg-white shadow-lg py-1 z-50">
+                      {subLinks.map(({ key, link }) => (
+                        <li key={key} className="px-1">
+                          <NavLink
+                            to={`${baseLink}${link}`}
+                            className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                          >
+                            {key}
+                          </NavLink>
+                        </li>
                       ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </ul>
+                  </div>
                 )}
               </li>
             ))}
