@@ -26,6 +26,7 @@ export interface Series {
   description: string;
   unit: string;
   source: string;
+  source_url: string;
   frequency: string;
   notes: string;
   observations: Observation[];
@@ -36,7 +37,7 @@ export interface Observation {
   date: Date;
   value: number /* float64 */;
 }
-export interface SeriesObservationsAPIResponse {
+export interface SeriesWithObservations {
   series: Series;
   observations: Observation[];
 }
