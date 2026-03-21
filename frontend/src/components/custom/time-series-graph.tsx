@@ -7,13 +7,9 @@ import {
   Line,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
-import type { SeriesObservationsAPIResponse } from "@/types/api";
+import type { SeriesWithObservations } from "@/types/api";
 
-export function TimeSeriesGraph({
-  data,
-}: {
-  data: SeriesObservationsAPIResponse;
-}) {
+export function TimeSeriesGraph({ data }: { data: SeriesWithObservations }) {
   const { series, observations } = data;
 
   // Transform observations into a format suitable for Recharts
@@ -27,8 +23,7 @@ export function TimeSeriesGraph({
       <h2 className="text-2xl font-semibold mb-4">{series.title}</h2>
       <p className="text-md">{series.description}</p>
       <LineChart
-        width={800}
-        height={400}
+        style={{ width: "100%", height: 400 }}
         data={chartData}
         margin={{ top: 20, right: 60, left: 20, bottom: 60 }}
       >
