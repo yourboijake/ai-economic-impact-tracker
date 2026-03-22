@@ -1,5 +1,0 @@
-packages:
-  - path: "github.com/yourboijake/ai-economic-impact-tracker/backend/src/models"
-    output_path: "frontend/src/types/api.ts"
-    type_mappings:
-      time.Time: "Date"

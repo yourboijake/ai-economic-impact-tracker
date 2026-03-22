@@ -5,42 +5,76 @@ import {
   CartesianGrid,
   Tooltip,
   Line,
+  Legend,
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
-import type { SeriesWithObservations } from "@/types/api";
+import type { TimeSeriesData } from "@/types/timeseries";
 
-export function TimeSeriesGraph({ data }: { data: SeriesWithObservations }) {
-  const { series, observations } = data;
+const SERIES_COLORS = [
+  "#2563eb",
+  "#dc2626",
+  "#16a34a",
+  "#d97706",
+  "#7c3aed",
+  "#db2777",
+];
 
-  // Transform observations into a format suitable for Recharts
-  const chartData = observations.map((obs) => ({
-    date: obs.date,
-    value: obs.value,
+export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
+  const { metadata, observations } = data;
+  const seriesKeys = Object.keys(metadata.series);
+
+  const parsedObservations = observations.map((obs) => ({
+    ...obs,
+    date: new Date(obs.date as string),
   }));
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">{series.title}</h2>
-      <p className="text-md">{series.description}</p>
+      <h2 className="text-2xl font-semibold mb-4">{metadata.title}</h2>
+      <p className="text-md mb-4">{metadata.description}</p>
       <LineChart
         style={{ width: "100%", height: 400 }}
-        data={chartData}
+        data={parsedObservations}
         margin={{ top: 20, right: 60, left: 20, bottom: 60 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          tickFormatter={(value) => value.slice(0, 10)}
-          angle={60}
-          textAnchor="start"
-        />
+        <XAxis dataKey="date" angle={60} textAnchor="start" />
         <YAxis />
-        <Tooltip labelFormatter={(value) => value.slice(0, 10)} />
-        <Line type="monotone" dataKey="value" dot={false} />
+        <Tooltip />
+        <Legend />
+        {seriesKeys.map((key, i) => (
+          <Line
+            key={key}
+            type="monotone"
+            dataKey={key}
+            name={metadata.series[key].title}
+            stroke={SERIES_COLORS[i % SERIES_COLORS.length]}
+            dot={false}
+            connectNulls={false}
+          />
+        ))}
       </LineChart>
       <RechartsDevtools />
-      <p className="text-sm mt-4">Source: {series.source}</p>
-      <p className="text-sm mt-2">Notes: {series.notes}</p>
+      <div className="mt-4 space-y-1">
+        {seriesKeys.map((key) => (
+          <p key={key} className="text-sm">
+            <span className="font-medium">{metadata.series[key].title} Source:</span>{" "}
+            <a href={metadata.series[key].source_url} className="underline">
+              {metadata.series[key].source}
+            </a>
+          </p>
+        ))}
+      </div>
+      <div className="mt-4 space-y-1">
+        {seriesKeys
+          .filter((key) => metadata.series[key].notes)
+          .map((key) => (
+            <p key={key} className="text-sm">
+              <span className="font-medium">{metadata.series[key].title} Notes:</span>{" "}
+              {metadata.series[key].notes}
+            </p>
+          ))}
+      </div>
     </div>
   );
 }
