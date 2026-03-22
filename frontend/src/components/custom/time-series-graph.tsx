@@ -75,9 +75,20 @@ export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
         margin={{ top: 20, right: 60, left: 20, bottom: 60 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" angle={60} textAnchor="start" />
+        <XAxis
+          dataKey="date"
+          angle={60}
+          textAnchor="start"
+          tickFormatter={(d: Date) =>
+            `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`
+          }
+        />
         <YAxis />
-        <Tooltip />
+        <Tooltip
+          labelFormatter={(d: Date) =>
+            `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`
+          }
+        />
         {seriesKeys.map((key, i) => (
           <Line
             key={key}
