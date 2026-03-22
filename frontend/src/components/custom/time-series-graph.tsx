@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import type { TimeSeriesData } from "@/types/timeseries";
 
 const SERIES_COLORS = [
@@ -20,11 +21,25 @@ const SERIES_COLORS = [
   "#db2777",
 ];
 
+function formatDate(d: Date) {
+  return `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`;
+}
+
 export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
   const { metadata, observations } = data;
   const seriesKeys = Object.keys(metadata.series);
 
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
+
+  const parsedObservations = observations.map((obs) => ({
+    ...obs,
+    date: new Date(obs.date as string),
+  }));
+
+  const [range, setRange] = useState<[number, number]>([
+    0,
+    parsedObservations.length - 1,
+  ]);
 
   const toggleSeries = (key: string) => {
     setHiddenSeries((prev) => {
@@ -35,10 +50,9 @@ export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
     });
   };
 
-  const parsedObservations = observations.map((obs) => ({
-    ...obs,
-    date: new Date(obs.date as string),
-  }));
+  const visibleObservations = parsedObservations.slice(range[0], range[1] + 1);
+  const startDate = parsedObservations[range[0]]?.date;
+  const endDate = parsedObservations[range[1]]?.date;
 
   return (
     <div>
@@ -71,7 +85,7 @@ export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
       </div>
       <LineChart
         style={{ width: "100%", height: 400 }}
-        data={parsedObservations}
+        data={visibleObservations}
         margin={{ top: 20, right: 60, left: 20, bottom: 60 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -79,14 +93,12 @@ export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
           dataKey="date"
           angle={60}
           textAnchor="start"
-          tickFormatter={(d: Date) =>
-            `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`
-          }
+          tickFormatter={(d: Date) => formatDate(d)}
         />
         <YAxis />
         <Tooltip
-          labelFormatter={(d: Date) =>
-            `${d.getUTCMonth() + 1}/${d.getUTCDate()}/${d.getUTCFullYear()}`
+          labelFormatter={(label) =>
+            label instanceof Date ? formatDate(label) : String(label)
           }
         />
         {seriesKeys.map((key, i) => (
@@ -99,9 +111,26 @@ export function TimeSeriesGraph({ data }: { data: TimeSeriesData }) {
             dot={false}
             connectNulls={false}
             hide={hiddenSeries.has(key)}
+            animationDuration={1200}
           />
         ))}
       </LineChart>
+      <div className="flex items-center gap-4 mt-2 px-1">
+        <span className="text-sm font-semibold whitespace-nowrap">
+          {startDate ? formatDate(startDate) : ""}
+        </span>
+        <Slider
+          min={0}
+          max={parsedObservations.length - 1}
+          step={1}
+          value={range}
+          onValueChange={(v) => setRange([v[0], v[1]])}
+          className="flex-1"
+        />
+        <span className="text-sm font-semibold whitespace-nowrap">
+          {endDate ? formatDate(endDate) : ""}
+        </span>
+      </div>
       <RechartsDevtools />
       <div className="mt-4 space-y-1">
         {seriesKeys.map((key) => (
